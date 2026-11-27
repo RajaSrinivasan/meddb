@@ -1,0 +1,15 @@
+name = "meddb_scp"
+description = "SCP-ECG reader backed by libbiosig"
+version = "0.1.0-dev"
+licenses = "MIT"
+authors = ["RajaSrinivasan"]
+maintainers = ["RajaSrinivasan <11705140+RajaSrinivasan@users.noreply.github.com>"]
+tags = ["scp", "ecg"]
+
+[[depends-on]]
+meddb_common = "*"
+meddb_biosig = "*"
+
+[[pins]]
+meddb_common = { path = "../meddb_common" }
+meddb_biosig = { path = "../meddb_biosig" }

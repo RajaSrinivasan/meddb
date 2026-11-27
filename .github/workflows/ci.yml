@@ -13,7 +13,7 @@ jobs:
       - name: Install system packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y gnat gprbuild libhdf5-dev libmatio-dev pkg-config curl ca-certificates make build-essential unzip
+          sudo apt-get install -y gnat gprbuild libhdf5-dev libmatio-dev libbiosig-dev libxml2-dev pkg-config curl ca-certificates make build-essential unzip
 
       - name: Install Alire
         run: |
@@ -28,7 +28,7 @@ jobs:
         with:
           version: "1.10"
 
-      - name: Bootstrap libwfdb and EDFlib
+      - name: Bootstrap native libraries
         run: ./scripts/bootstrap_deps.sh
 
       - name: Build
@@ -49,12 +49,16 @@ jobs:
           ./scripts/download_mat.sh
           ./scripts/download_edf.sh --quick
           ./scripts/download_hdf5.sh --quick
+          ./scripts/download_scp.sh
+          ./scripts/download_aecg.sh
           ./tests/smoke.sh
           julia --project=julia julia/scripts/plot_wfdb.jl data/wfdb/mitdb/100 /tmp/mitdb100.html
           julia --project=julia julia/scripts/plot_edf.jl data/edf/sleep-edfx/SC4001E0-PSG.edf /tmp/psg.html
           julia --project=julia julia/scripts/plot_mat.jl data/mat/cpsc/A0001.mat /tmp/A0001.html
           julia --project=julia julia/scripts/plot_hdf5.jl data/hdf5/heartcycle/CH07_59146237_s0000029.h5 /tmp/heartcycle.html
-          for f in /tmp/mitdb100.html /tmp/psg.html /tmp/A0001.html /tmp/heartcycle.html; do
+          julia --project=julia julia/scripts/plot_scp.jl data/scp/hannover/PFE105.scp /tmp/scp.html
+          julia --project=julia julia/scripts/plot_aecg.jl data/aecg/Example-aECG.xml /tmp/aecg.html
+          for f in /tmp/mitdb100.html /tmp/psg.html /tmp/A0001.html /tmp/heartcycle.html /tmp/scp.html /tmp/aecg.html; do
             test -s "$f"
             grep -q "Plotly.newPlot" "$f"
           done

@@ -62,4 +62,28 @@ if [[ -f data/hdf5/but-cgm/124001_2124-04-05_ECG.h5 ]]; then
   grep -q "fs=1000" <<<"$out"
 fi
 
+if [[ -f data/scp/hannover/PFE105.scp ]]; then
+  out="$("$ROOT/bin/meddb-scp" data/scp/hannover/PFE105.scp --duration 0.1)"
+  grep -q "format: scp-ecg" <<<"$out"
+  grep -q "channels: 8" <<<"$out"
+  grep -q "fs=500" <<<"$out"
+  grep -q "Sinus-Rhythmus" <<<"$out"
+fi
+
+if [[ -f data/scp/test.scp ]]; then
+  out="$("$ROOT/bin/meddb-scp" data/scp/test.scp --duration 0.1)"
+  grep -q "channels: 8" <<<"$out"
+  grep -q "fs=500" <<<"$out"
+  grep -q "Ectopic atrial rhythm" <<<"$out"
+fi
+
+if [[ -f data/aecg/Example-aECG.xml ]]; then
+  out="$("$ROOT/bin/meddb-aecg" data/aecg/Example-aECG.xml --duration 0.2)"
+  grep -q "format: hl7-aecg" <<<"$out"
+  grep -q "channels: 12" <<<"$out"
+  grep -q "fs=500" <<<"$out"
+  grep -q "Sinus Rhythm" <<<"$out"
+  grep -q "26 Nov 2026" <<<"$out"
+fi
+
 echo "smoke checks passed"

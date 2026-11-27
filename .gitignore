@@ -6,6 +6,9 @@ data/**/*.edf
 data/**/*.bdf
 data/**/*.mat
 data/**/*.h5
+data/**/*.scp
+data/**/*.xml
+data/**/*.zip
 data/**/*.partial
 
 # Build output

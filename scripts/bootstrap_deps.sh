@@ -22,6 +22,17 @@ need curl
 need make
 need pkg-config
 
+as_root() {
+  if [[ "$(id -u)" -eq 0 ]]; then
+    "$@"
+  elif command -v sudo >/dev/null 2>&1; then
+    sudo "$@"
+  else
+    echo "need root to install into $PREFIX" >&2
+    exit 1
+  fi
+}
+
 if ! pkg-config --exists hdf5; then
   echo "libhdf5 development files not found (pkg-config hdf5). On Ubuntu: sudo apt-get install libhdf5-dev" >&2
   exit 1
@@ -41,7 +52,7 @@ if [[ ! -e "$PREFIX/lib/libwfdb.so" ]]; then
     cd wfdb-10.7.0
     ./configure --without-netfiles --without-flac --prefix="$PREFIX"
     make -C lib -j"$(nproc)"
-    make -C lib install
+    as_root make -C lib install
   )
 fi
 
@@ -53,20 +64,16 @@ if [[ ! -e "$PREFIX/lib/libedf.so" ]]; then
     gcc -O2 -fPIC -fvisibility=hidden -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE \
       -DEDFLIB_SO_DLL -DEDFLIB_BUILD -c edflib.c -o edflib.o
     gcc -shared -Wl,-soname,libedf.so.1 -o libedf.so.1.0 edflib.o -lm
-    install -d "$PREFIX/lib" "$PREFIX/include"
-    install -m 755 libedf.so.1.0 "$PREFIX/lib/libedf.so.1.0"
-    ln -sfn libedf.so.1.0 "$PREFIX/lib/libedf.so.1"
-    ln -sfn libedf.so.1 "$PREFIX/lib/libedf.so"
-    install -m 644 edflib.h "$PREFIX/include/edflib.h"
+    as_root install -d "$PREFIX/lib" "$PREFIX/include"
+    as_root install -m 755 libedf.so.1.0 "$PREFIX/lib/libedf.so.1.0"
+    as_root ln -sfn libedf.so.1.0 "$PREFIX/lib/libedf.so.1"
+    as_root ln -sfn libedf.so.1 "$PREFIX/lib/libedf.so"
+    as_root install -m 644 edflib.h "$PREFIX/include/edflib.h"
   )
 fi
 
 if command -v ldconfig >/dev/null 2>&1; then
-  if [[ "$(id -u)" -eq 0 ]]; then
-    ldconfig
-  elif command -v sudo >/dev/null 2>&1; then
-    sudo ldconfig
-  fi
+  as_root ldconfig
 fi
 
 plotly="$ROOT/julia/vendor/plotly.min.js"

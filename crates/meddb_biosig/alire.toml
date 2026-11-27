@@ -1,0 +1,13 @@
+name = "meddb_biosig"
+description = "Ada binding to libbiosig for SCP-ECG and HL7 aECG"
+version = "0.1.0-dev"
+licenses = "MIT"
+authors = ["RajaSrinivasan"]
+maintainers = ["RajaSrinivasan <11705140+RajaSrinivasan@users.noreply.github.com>"]
+tags = ["biosig", "scp", "aecg", "ecg"]
+
+[[depends-on]]
+meddb_common = "*"
+
+[[pins]]
+meddb_common = { path = "../meddb_common" }

@@ -21,8 +21,10 @@ julia --project=julia julia/scripts/plot_wfdb.jl data/wfdb/mitdb/100 out/mitdb10
 julia --project=julia julia/scripts/plot_edf.jl data/edf/sleep-edfx/SC4001E0-PSG.edf out/psg.html
 julia --project=julia julia/scripts/plot_mat.jl data/mat/cpsc/A0001.mat out/A0001.html
 julia --project=julia julia/scripts/plot_hdf5.jl data/hdf5/but-cgm/124001_2124-04-05_ECG.h5 out/but.html
+julia --project=julia julia/scripts/plot_scp.jl data/scp/hannover/PFE105.scp out/pfe105.html
+julia --project=julia julia/scripts/plot_aecg.jl data/aecg/Example-aECG.xml out/aecg.html
 ```
 
-Each format script calls the matching Ada CLI, then `MeddbPlots.plot_recording`. Pass `--start` and `--duration` to choose the exported window. `plot_edf.jl` attaches a sibling `*Hypnogram.edf` when it finds one, and shortens the default window for `.bdf` files.
+Each format script calls the matching Ada CLI, then `MeddbPlots.plot_recording`. Pass `--start` and `--duration` to choose the exported window. `plot_edf.jl` attaches a sibling `*Hypnogram.edf` when it finds one, and shortens the default window for `.bdf` files. `plot_scp.jl` and `plot_aecg.jl` default to a 10 s window, which covers the Hannover SCP-ECG records and the HL7 aECG example. aECG annotation regions in that window are drawn as overlays.
 
 `load_export(prefix)` and `plot_recording(rec; outfile)` are the stable API. A format-specific script should export normalized CSV/JSON and call those two functions rather than parsing the native file in Julia.

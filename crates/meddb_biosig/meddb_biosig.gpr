@@ -1,0 +1,22 @@
+with "../meddb_common/meddb_common.gpr";
+
+project Meddb_Biosig is
+
+   for Library_Name use "meddb_biosig";
+   for Library_Kind use "static";
+   for Library_Dir use "lib";
+   for Source_Dirs use ("src", "src/c");
+   for Object_Dir use "obj";
+   for Create_Missing_Dirs use "True";
+   for Languages use ("Ada", "C");
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-g", "-O2", "-gnat2012", "-gnatwa");
+      for Default_Switches ("C") use ("-O2", "-fPIC", "-D_GNU_SOURCE");
+   end Compiler;
+
+   package Linker is
+      for Linker_Options use ("-lbiosig", "-lm");
+   end Linker;
+
+end Meddb_Biosig;

@@ -1,0 +1,15 @@
+name = "meddb_scp_app"
+description = "CLI reader for SCP-ECG recordings"
+version = "0.1.0-dev"
+licenses = "MIT"
+authors = ["RajaSrinivasan"]
+maintainers = ["RajaSrinivasan <11705140+RajaSrinivasan@users.noreply.github.com>"]
+executables = ["meddb-scp"]
+
+[[depends-on]]
+meddb_common = "*"
+meddb_scp = "*"
+
+[[pins]]
+meddb_common = { path = "../../crates/meddb_common" }
+meddb_scp = { path = "../../crates/meddb_scp" }

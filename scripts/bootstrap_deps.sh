@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build libwfdb 10.7.0 and EDFlib (pinned commit) into /usr/local.
-# libhdf5 and libmatio come from the system packages.
+# libhdf5, libmatio, and libbiosig come from the system packages.
+# Ubuntu 24.04 ships libbiosig 3.0.2 as libbiosig-dev (package version 2.6.0).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -40,6 +41,26 @@ fi
 if ! pkg-config --exists matio; then
   echo "libmatio development files not found. On Ubuntu: sudo apt-get install libmatio-dev" >&2
   exit 1
+fi
+
+install_apt() {
+  if ! command -v apt-get >/dev/null 2>&1; then
+    echo "need apt-get to install: $*" >&2
+    exit 1
+  fi
+  as_root apt-get update
+  as_root env DEBIAN_FRONTEND=noninteractive apt-get install -y "$@"
+}
+
+# libbiosig's .pc file advertises broken -D= macros; --exists is still valid.
+# Do not pass `pkg-config --cflags libbiosig` to the compiler.
+if ! pkg-config --exists libbiosig || [[ ! -f /usr/include/biosig.h && ! -f /usr/local/include/biosig.h ]]; then
+  echo "installing libbiosig-dev"
+  install_apt libbiosig-dev
+fi
+if ! pkg-config --exists libxml-2.0; then
+  echo "installing libxml2-dev"
+  install_apt libxml2-dev
 fi
 
 mkdir -p "$WORKDIR"
@@ -82,4 +103,4 @@ if [[ ! -f "$plotly" ]]; then
   curl -fsSL -o "$plotly" "https://cdn.plot.ly/plotly-2.35.2.min.js"
 fi
 
-echo "dependencies ready: libwfdb, libedf, $(pkg-config --modversion hdf5) hdf5, $(pkg-config --modversion matio) matio"
+echo "dependencies ready: libwfdb, libedf, libbiosig $(pkg-config --modversion libbiosig), $(pkg-config --modversion hdf5) hdf5, $(pkg-config --modversion matio) matio"

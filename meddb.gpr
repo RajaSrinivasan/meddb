@@ -4,5 +4,7 @@ aggregate project Meddb is
       "tools/meddb-edf/meddb_edf.gpr",
       "tools/meddb-mat/meddb_mat.gpr",
       "tools/meddb-hdf5/meddb_hdf5.gpr",
+      "tools/meddb-scp/meddb_scp.gpr",
+      "tools/meddb-aecg/meddb_aecg.gpr",
       "tests/test_common.gpr");
 end Meddb;

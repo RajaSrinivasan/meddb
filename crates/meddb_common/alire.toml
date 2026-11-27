@@ -1,0 +1,7 @@
+name = "meddb_common"
+description = "Shared recording model and CSV/JSON export for meddb"
+version = "0.1.0-dev"
+licenses = "MIT"
+authors = ["RajaSrinivasan"]
+maintainers = ["RajaSrinivasan <11705140+RajaSrinivasan@users.noreply.github.com>"]
+tags = ["medical", "signal", "ecg"]

@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnat gprbuild libhdf5-dev libmatio-dev pkg-config curl ca-certificates make build-essential unzip
+
+      - name: Install Alire
+        run: |
+          curl -fsSL -o /tmp/alr.zip https://github.com/alire-project/alire/releases/download/v2.1.0/alr-2.1.0-bin-x86_64-linux.zip
+          unzip -q /tmp/alr.zip -d /tmp/alr
+          sudo cp "$(find /tmp/alr -type f -name alr | head -1)" /usr/local/bin/alr
+          alr --non-interactive toolchain --select gnat_external
+          alr --non-interactive toolchain --select gprbuild=18.0 || alr --non-interactive toolchain --select gprbuild
+
+      - name: Install Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.10"
+
+      - name: Bootstrap libwfdb and EDFlib
+        run: ./scripts/bootstrap_deps.sh
+
+      - name: Build
+        run: gprbuild -p -P meddb.gpr
+
+      - name: Unit tests and synthetic plot
+        run: |
+          julia --project=julia -e 'using Pkg; Pkg.instantiate()'
+          ./bin/test_common
+          julia --project=julia julia/scripts/plot_synthetic.jl /tmp/synthetic.html
+          test -s /tmp/synthetic.html
+          grep -q "Plotly.newPlot" /tmp/synthetic.html
+          grep -q "function decimate" /tmp/synthetic.html
+
+      - name: Download quick samples and smoke the CLIs
+        run: |
+          ./scripts/download_wfdb.sh
+          ./scripts/download_mat.sh
+          ./scripts/download_edf.sh --quick
+          ./scripts/download_hdf5.sh --quick
+          ./tests/smoke.sh
+          julia --project=julia julia/scripts/plot_wfdb.jl data/wfdb/mitdb/100 /tmp/mitdb100.html
+          julia --project=julia julia/scripts/plot_edf.jl data/edf/sleep-edfx/SC4001E0-PSG.edf /tmp/psg.html
+          julia --project=julia julia/scripts/plot_mat.jl data/mat/cpsc/A0001.mat /tmp/A0001.html
+          julia --project=julia julia/scripts/plot_hdf5.jl data/hdf5/heartcycle/CH07_59146237_s0000029.h5 /tmp/heartcycle.html
+          for f in /tmp/mitdb100.html /tmp/psg.html /tmp/A0001.html /tmp/heartcycle.html; do
+            test -s "$f"
+            grep -q "Plotly.newPlot" "$f"
+          done

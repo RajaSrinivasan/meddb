@@ -1,0 +1,13 @@
+name = "meddb_wfdb"
+description = "Ada binding to libwfdb"
+version = "0.1.0-dev"
+licenses = "MIT"
+authors = ["RajaSrinivasan"]
+maintainers = ["RajaSrinivasan <11705140+RajaSrinivasan@users.noreply.github.com>"]
+tags = ["wfdb", "ecg", "physionet"]
+
+[[depends-on]]
+meddb_common = "*"
+
+[[pins]]
+meddb_common = { path = "../meddb_common" }

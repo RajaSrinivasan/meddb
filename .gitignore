@@ -1,0 +1,30 @@
+# Downloaded recordings stay out of git. Checksums and data/README.md stay in.
+data/**/*.hea
+data/**/*.dat
+data/**/*.atr
+data/**/*.edf
+data/**/*.bdf
+data/**/*.mat
+data/**/*.h5
+data/**/*.partial
+
+# Build output
+bin/
+**/obj/
+**/lib/
+alire/
+config/
+*.ali
+*.o
+*.so
+*.a
+
+# Generated plots and Julia artifacts
+out/
+*.html
+julia/Manifest.toml
+julia/vendor/
+
+# Local dependency builds
+third_party/
+/tmp/

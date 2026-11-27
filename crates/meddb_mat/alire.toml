@@ -1,0 +1,13 @@
+name = "meddb_mat"
+description = "Ada binding to matio for MATLAB waveform files"
+version = "0.1.0-dev"
+licenses = "MIT"
+authors = ["RajaSrinivasan"]
+maintainers = ["RajaSrinivasan <11705140+RajaSrinivasan@users.noreply.github.com>"]
+tags = ["matlab", "ecg"]
+
+[[depends-on]]
+meddb_common = "*"
+
+[[pins]]
+meddb_common = { path = "../meddb_common" }

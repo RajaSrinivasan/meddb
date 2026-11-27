@@ -1,0 +1,15 @@
+name = "meddb_mat_app"
+description = "CLI reader for MATLAB waveform files"
+version = "0.1.0-dev"
+licenses = "MIT"
+authors = ["RajaSrinivasan"]
+maintainers = ["RajaSrinivasan <11705140+RajaSrinivasan@users.noreply.github.com>"]
+executables = ["meddb-mat"]
+
+[[depends-on]]
+meddb_common = "*"
+meddb_mat = "*"
+
+[[pins]]
+meddb_common = { path = "../../crates/meddb_common" }
+meddb_mat = { path = "../../crates/meddb_mat" }

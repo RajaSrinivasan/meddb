@@ -1,0 +1,8 @@
+aggregate project Meddb is
+   for Project_Files use
+     ("tools/meddb-wfdb/meddb_wfdb.gpr",
+      "tools/meddb-edf/meddb_edf.gpr",
+      "tools/meddb-mat/meddb_mat.gpr",
+      "tools/meddb-hdf5/meddb_hdf5.gpr",
+      "tests/test_common.gpr");
+end Meddb;

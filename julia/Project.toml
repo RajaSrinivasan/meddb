@@ -1,0 +1,11 @@
+name = "MeddbPlots"
+uuid = "f4a1c0de-7b21-4e5a-9c33-1d2e3f4a5b6c"
+version = "0.1.0"
+authors = ["RajaSrinivasan"]
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+
+[compat]
+JSON = "1"
+julia = "1.10"
